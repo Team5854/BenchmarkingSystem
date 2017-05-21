@@ -6,14 +6,24 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
+/**
+ * 
+ * @author keegan
+ *
+ *
+ *	does user controlling.
+ */
 public class UsersController {
-	public ArrayList<User> users = new ArrayList<User>();
+	public ArrayList<User> users = new ArrayList<User>(); //scalable array of all users.
 	int weekOfMonth = 0;
 	int month = 0;
 	int year = 0;
 	String[] lastDataFile;
 	boolean FileDidNotExist = false;
 	public UsersController() {
+		
+		//instance of week, month, years for user file saving each week.
 		Calendar calobj = Calendar.getInstance(); // get a calendar
 		weekOfMonth = calobj.get(Calendar.WEEK_OF_MONTH);
 		month = calobj.get(Calendar.MONTH)+1;
@@ -25,7 +35,11 @@ public class UsersController {
 			String path="/home/pi/SavedData/Users"+ weekOfMonth + month + year +".txt";
 			File file = new File(path);
 
-			// If file doesn't exists, then create it
+			/**
+			 * If the file does not exist then it means it will be empty with no users. this will get the last file
+			 * that contained users and then read them all and then write them with logged out users and no hours.
+			 * then write into the file that saves last weeks file name the current file for next week.
+			 */
 			if (!file.exists()) {
 				FileDidNotExist = true;
 				file.createNewFile();
@@ -41,10 +55,11 @@ public class UsersController {
 
 				String line0 = "";
 			    while ((line0 = br.readLine()) != null) {
-			    	lastDataFile = line0.split(" ");
+			    	lastDataFile = line0.split(" ");// get data
 			    }			    
 		    	br.close();
-		    	
+		    
+		    	//change the path to be last weeks file
 			    path = "/home/pi/SavedData/Users"+ lastDataFile[0] + lastDataFile[1] + lastDataFile[2] + ".txt";
 			    file = new File(path);
 			    
@@ -58,7 +73,7 @@ public class UsersController {
 				// Close connection
 				bw.close();
 			}
-
+			//if file exists then read from this weeks file, if file did not exist read from last weeks file
 			br1 = new BufferedReader(new FileReader(file.getAbsoluteFile()));
 
 			String line = "";
@@ -67,6 +82,8 @@ public class UsersController {
 		    	User newUser = new User(line);
 		        users.add(newUser);
 		    }
+		    
+		    //if the file from this week did not exist then reset all users to be default for a clean start for the week.
 		    if  (FileDidNotExist) {
 		    	for (User u : users) {
 		    		u.TotalHours = 0;
@@ -74,14 +91,14 @@ public class UsersController {
 		    	}
 		    }
 		    br1.close();
-		    saveUsers();
+		    saveUsers();// then save all users to the file
 		} catch(Exception e) {
 			
 		} 
 	}
 	
 	
-	public int findUserByID(String ID) {
+	public int findUserByID(String ID) { //this finds the user by Pin.
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getID().equalsIgnoreCase(ID)) {
 				return i;
@@ -90,11 +107,15 @@ public class UsersController {
 		return -1;
 	}
 	
-	public void addNewUser(String ID, String name) {
+	public void addNewUser(String ID, String name) { //adds new user by id and name
 		users.add(new User(ID, name));
 	}
 	
-	public void saveUsers() {
+	/**
+	 * (process of writing to file self explanitor already)
+	 * saves all users in the system to the current weeks file.
+	 */
+	public void saveUsers() { 
 		try {
 			// Create new file
 			String path="/home/pi/SavedData/Users"+ weekOfMonth + month + year +".txt";
@@ -120,7 +141,9 @@ public class UsersController {
 		}
 	}
 
-
+	/**
+	 * gets the pin of the user. seperates it from the glitch id.
+	 */
 	public String getPin(String number) {
 		String[] inbetween = number.split(",");
 		String PIN = "";

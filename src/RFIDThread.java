@@ -4,28 +4,28 @@ public class RFIDThread extends Thread {
 	String number = null;
 	boolean pause = false;
 	public void run() {
-		while (true) {
-			if (!pause) {
-				number = noder.read();
+		while (true) { //while running
+			if (!pause) { //and not paused
+				number = noder.read(); //then read in the ID of card.
 			}
 		}
 	}
-	public String getNumber() {
-		if (pause) {
+	public String getNumber() { //if not paused then return ID
+		if (pause) { 
 			return null;
 		}
 		return number;
 	}
-	public String getNewNumber() {
+	public String getNewNumber() { //read in from a not thread.
 		if ((number = noder.read()) != null) {
 			return number;
 		}
 		return null;
 	}
-	public void pause() {
+	public void pause() {//pause thread.
 		pause = true;
 	}
-	public void unPause() {
+	public void unPause() { // unpause thread.
 		pause = false;
 	}
 
