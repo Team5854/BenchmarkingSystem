@@ -3,7 +3,7 @@
 
 RFID System for use in tracking members hours at meetings.
 
-- Features:
+Features:
   - user menu:
     - logout
     - list current ID
