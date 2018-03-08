@@ -1,6 +1,6 @@
 var Discord = require("discord.js");
 
-var client = new Discord.Client();
+let client = new Discord.Client();
 
 let mechanism = function mechanism() {
     this.name = "default";
@@ -14,10 +14,8 @@ let mechanisms = {
     },
     add: function(newMech) {
         this.array.push(newMech);
-        console.log(this.array);
     },
     get: function(i) {
-        console.log(this.array);
         return this.array[i];
     },
     sort: function() {
